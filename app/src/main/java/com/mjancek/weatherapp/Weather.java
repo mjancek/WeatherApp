@@ -12,7 +12,7 @@ public class Weather {
     private int clouds;
     private String city;
 
-    public Weather() {
+    Weather() {
 
     }
 
