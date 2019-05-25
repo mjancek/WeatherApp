@@ -5,6 +5,7 @@ public class Weather {
     private String main;
     private String description;
     private String icon;
+    private int ID;
     private int temperature;
     private int pressure;
     private int humidity;
@@ -16,7 +17,7 @@ public class Weather {
 
     }
 
-    public Weather(String main, String description, String icon, int temperature, int pressure, int humidity, float wind, int clouds, String city) {
+    public Weather(String main, String description, String icon, int temperature, int pressure, int humidity, float wind, int clouds, String city, int ID) {
         this.main = main;
         this.description = description;
         this.icon = icon;
@@ -26,73 +27,78 @@ public class Weather {
         this.wind = wind;
         this.clouds = clouds;
         this.city = city;
+        this.ID = ID;
     }
 
-    public String getMain() {
+    String getMain() {
         return main;
     }
 
-    public String getDescription() {
+    String getDescription() {
         return description;
     }
 
-    public String getIcon() {
+    String getIcon() {
         return icon;
     }
 
-    public int getTemperature() {
+    int getTemperature() {
         return temperature;
     }
 
-    public int getPressure() {
+    int getPressure() {
         return pressure;
     }
 
-    public int getHumidity() {
+    int getHumidity() {
         return humidity;
     }
 
-    public float getWind() {
+    float getWind() {
         return wind;
     }
 
-    public int getClouds() {
+    int getClouds() {
         return clouds;
     }
 
-    public String getCity() { return city; }
+    String getCity() { return city; }
 
-    public void setMain(String main) {
+    int getID() { return ID; }
+
+    void setMain(String main) {
         this.main = main;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
-    public void setIcon(String icon) {
+    void setIcon(String icon) {
         this.icon = icon;
     }
 
-    public void setTemperature(int temperature) {
+    void setTemperature(int temperature) {
         this.temperature = temperature;
     }
 
-    public void setPressure(int pressure) {
+    void setPressure(int pressure) {
         this.pressure = pressure;
     }
 
-    public void setHumidity(int humidity) {
+    void setHumidity(int humidity) {
         this.humidity = humidity;
     }
 
-    public void setWind(float wind) {
+    void setWind(float wind) {
         this.wind = wind;
     }
 
-    public void setClouds(int clouds) {
+    void setClouds(int clouds) {
         this.clouds = clouds;
     }
 
-    public void setCity(String city) { this.city = city; }
+    void setCity(String city) { this.city = city; }
+
+    void setID(int ID) { this.ID = ID; }
 }

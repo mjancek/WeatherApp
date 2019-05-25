@@ -3,6 +3,7 @@ package com.mjancek.weatherapp;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -14,10 +15,12 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,26 +32,26 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 
 import static com.mjancek.weatherapp.Helper.getLink;
 import static com.mjancek.weatherapp.Helper.isConnected;
+import static com.mjancek.weatherapp.Helper.setWeatherIcon;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    private RequestAPI getData = new RequestAPI();
 
     private FusedLocationProviderClient fusedLocationClient;
     protected static final int MY_PERMISSIONS_ACCESS_COARSE_LOCATION = 0;
 
     double latitude, longitude;
 
-    public TextView cityText;
-    public TextView temperatureText;
-    public TextView humidityText;
-    public TextView pressureText;
-    public ImageView weatherImage;
-    public ImageButton refreshBtn;
+    TextView cityText;
+    TextView temperatureText;
+    TextView humidityText;
+    TextView pressureText;
+    ImageButton refreshBtn;
+    TextView weatherText;
 
 
     @Override
@@ -56,18 +59,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        cityText = (TextView) findViewById(R.id.cityTextView);
-        temperatureText = (TextView) findViewById(R.id.temperatureTextView);
-        humidityText = (TextView) findViewById(R.id.humidityTextView);
-        pressureText = (TextView) findViewById(R.id.pressureTextView);
-        weatherImage = (ImageView) findViewById(R.id.weatherImageView);
-        refreshBtn = (ImageButton) findViewById(R.id.imageButton);
+        // Find all UI items
+        cityText = findViewById(R.id.cityTextView);
+        temperatureText = findViewById(R.id.temperatureTextView);
+        humidityText = findViewById(R.id.humidityTextView);
+        pressureText = findViewById(R.id.pressureTextView);
+        refreshBtn = findViewById(R.id.imageButton);
+        weatherText = findViewById(R.id.weatherTextView);
+
+        Typeface face = Typeface.createFromAsset(getAssets(), "font/weathericons_regular_webfont.ttf");
+        weatherText.setTypeface(face);
 
 
-        if(isConnected(this)){           // check if 'this' as context is right
-            finishAndRemoveTask();
-        }
-
+        // For getting location
+        // Through fusedLocationClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -77,17 +82,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         String url = getLink(latitude, longitude);
-
-
+        // Need to create new instance of class on every call
+        RequestAPI getData = new RequestAPI();
         getData.execute(url);
 
     }
 
 
+
+
     public void refreshWeather(View theBtn){
 
         getLocation();
-
+        // Need to create new instance of class on every call
+        RequestAPI getData = new RequestAPI();
         getData.execute(getLink(latitude, longitude));
 
     }
@@ -139,14 +147,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     /**
      * Background task for requesting weather data from API.
      * Use AsyncTask to make background thread.
      */
     public class RequestAPI extends AsyncTask<String, Void, JSONObject> {
 
-        private Weather weatherStatus = new Weather();
+        Weather weatherStatus = new Weather();
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            // If there is no connection, infrom user about it and cancel task
+            if(!isConnected(getApplicationContext())) {
+                Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+                this.cancel(true);
+                refreshBtn.setVisibility(View.INVISIBLE);
+                // TODO: disable all UI items and show information about no connection
+            }
+            refreshBtn.setEnabled(false);
+
+        }
 
         @Override
         protected JSONObject doInBackground(String... APIurl) {
@@ -166,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("HTTP_NOT_OK", "HTTP code not OK");    // TODO: handle error from site
                 }
 
+                // Parse data from API
                 String response = "";
-
                 InputStream in = urlConnection.getInputStream();
                 InputStreamReader reader = new InputStreamReader(in);
 
@@ -202,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject APIData) {
             super.onPostExecute(APIData);
 
+            // Parse JSON object to object variables
             try {
                 JSONArray weatherData = APIData.getJSONArray("weather");
                 JSONObject mainData = APIData.getJSONObject("main");
@@ -210,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 JSONObject jsonPart = weatherData.getJSONObject(0);
+                weatherStatus.setID(jsonPart.getInt("id"));
                 weatherStatus.setMain(jsonPart.getString("main"));
                 weatherStatus.setDescription(jsonPart.getString("description"));
                 weatherStatus.setIcon(jsonPart.getString("icon"));
@@ -228,14 +252,21 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Log.d("Main", weatherStatus.getMain());
-            Log.d("City", weatherStatus.getCity());
+//            Log.d("Main", weatherStatus.getMain());
+//            Log.d("City", weatherStatus.getCity());
+//            Log.d("Icon", weatherStatus.getIcon());
+            showWeather(weatherStatus);
 
-            cityText.setText(weatherStatus.getCity());
-            temperatureText.setText(String.valueOf(weatherStatus.getTemperature()));
-            humidityText.setText(String.valueOf(weatherStatus.getHumidity()));
-            pressureText.setText(String.valueOf(weatherStatus.getPressure()));
-
+            refreshBtn.setEnabled(true);
         }
+    }
+
+    void showWeather(Weather weatherStatus){
+
+        cityText.setText(weatherStatus.getCity());
+        temperatureText.setText(String.format(Locale.ENGLISH, "%d°C", weatherStatus.getTemperature()));
+        humidityText.setText(String.format(Locale.ENGLISH, "%d%%", weatherStatus.getHumidity()));
+        pressureText.setText(String.format(Locale.ENGLISH, "%d hPa", weatherStatus.getPressure()));
+        weatherText.setText(setWeatherIcon(getBaseContext(), weatherStatus.getID()));
     }
 }
