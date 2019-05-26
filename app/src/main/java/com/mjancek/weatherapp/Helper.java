@@ -61,16 +61,16 @@ class Helper {
     public static String setWeatherIcon(Context context, int id) {
         id /= 100;
         String icon = "";
-        if (id * 100 == 800) {
-            int hourOfDay = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-            if (hourOfDay >= 7 && hourOfDay < 20) {
-                icon = context.getString(R.string.weather_sunny);
-            }
-            else {
-                icon = context.getString(R.string.weather_clear_night);
-            }
-        }
-        else {
+//        if (id * 100 == 800) {
+//            int hourOfDay = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+//            if (hourOfDay >= 7 && hourOfDay < 20) {
+//                icon = context.getString(R.string.weather_sunny);
+//            }
+//            else {
+//                icon = context.getString(R.string.weather_clear_night);
+//            }
+//        }
+//        else {
             switch (id) {
                 case 2:
                     icon = context.getString(R.string.weather_thunder);
@@ -91,7 +91,7 @@ class Helper {
                     icon = context.getString(R.string.weather_rainy);
                     break;
             }
-        }
+
         return icon;
     }
 

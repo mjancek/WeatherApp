@@ -13,14 +13,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,7 +49,13 @@ public class MainActivity extends AppCompatActivity {
     TextView humidityText;
     TextView pressureText;
     ImageButton refreshBtn;
-    TextView weatherText;
+    TextView weatherIcon;
+    TextView humidityIcon;
+    TextView pressureIcon;
+    TextView cloudsIcon;
+    TextView windIcon;
+    TextView cloudsText;
+    TextView windText;
 
 
     @Override
@@ -65,10 +69,21 @@ public class MainActivity extends AppCompatActivity {
         humidityText = findViewById(R.id.humidityTextView);
         pressureText = findViewById(R.id.pressureTextView);
         refreshBtn = findViewById(R.id.imageButton);
-        weatherText = findViewById(R.id.weatherTextView);
+        weatherIcon = findViewById(R.id.weatherTextView);
+        humidityIcon = findViewById(R.id.humidityCaption);
+        pressureIcon = findViewById(R.id.pressureCaption);
+        cloudsIcon = findViewById(R.id.cloudsCaption);
+        cloudsText = findViewById(R.id.cloudsTextView);
+        windIcon = findViewById(R.id.windCaption);
+        windText = findViewById(R.id.windTextView);
 
         Typeface face = Typeface.createFromAsset(getAssets(), "font/weathericons_regular_webfont.ttf");
-        weatherText.setTypeface(face);
+        weatherIcon.setTypeface(face);
+        humidityIcon.setTypeface(face);
+        pressureIcon.setTypeface(face);
+        windIcon.setTypeface(face);
+        cloudsIcon.setTypeface(face);
+
 
 
         // For getting location
@@ -189,20 +204,20 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // Parse data from API
-                String response = "";
+                StringBuilder response = new StringBuilder();
                 InputStream in = urlConnection.getInputStream();
                 InputStreamReader reader = new InputStreamReader(in);
 
                 int data = reader.read();
                 while(data != -1){
                     char current = (char) data;
-                    response += current;
+                    response.append(current);
                     data = reader.read();
                 }
 
 
-                Log.d("Return", response);
-                return new JSONObject(response);
+                Log.d("Return", response.toString());
+                return new JSONObject(response.toString());
 
             } catch (MalformedURLException e){
                 e.printStackTrace();
@@ -267,6 +282,8 @@ public class MainActivity extends AppCompatActivity {
         temperatureText.setText(String.format(Locale.ENGLISH, "%d°C", weatherStatus.getTemperature()));
         humidityText.setText(String.format(Locale.ENGLISH, "%d%%", weatherStatus.getHumidity()));
         pressureText.setText(String.format(Locale.ENGLISH, "%d hPa", weatherStatus.getPressure()));
-        weatherText.setText(setWeatherIcon(getBaseContext(), weatherStatus.getID()));
+        weatherIcon.setText(setWeatherIcon(getBaseContext(), weatherStatus.getID()));
+        cloudsText.setText(String.format(Locale.ENGLISH, "%d%%", weatherStatus.getClouds()));
+        windText.setText(String.format(Locale.ENGLISH, "%.1fm/s", weatherStatus.getWind()));
     }
 }

@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="170dp"
         android:layout_marginEnd="8dp"
         android:textSize="44sp"
         android:visibility="visible"
@@ -36,11 +36,11 @@
         android:id="@+id/humidityTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="60dp"
         android:textSize="23sp"
         android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/humidityCaption"
         app:layout_constraintTop_toBottomOf="@+id/temperatureTextView"
         tools:text="Humidity" />
 
@@ -48,12 +48,12 @@
         android:id="@+id/pressureTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="70dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="56dp"
         android:textSize="23sp"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/temperatureTextView"
+        app:layout_constraintStart_toEndOf="@+id/pressureCaption"
+        app:layout_constraintTop_toBottomOf="@+id/windTextView"
         tools:text="Pressure" />
 
     <ImageButton
@@ -73,24 +73,84 @@
         android:id="@+id/humidityCaption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Humidity"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/humidityTextView"
-        app:layout_constraintStart_toStartOf="@+id/humidityTextView"
-        tools:text="Humidity" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/humidity_icon"
+        android:textSize="27sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureTextView" />
 
     <TextView
         android:id="@+id/weatherTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="40dp"
-        android:textSize="50sp"
+        android:layout_marginBottom="32dp"
+        android:textSize="104sp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/temperatureTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cityTextView" />
+
+    <TextView
+        android:id="@+id/pressureCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="@string/pressure_icon"
+        android:textSize="27sp"
+        app:layout_constraintStart_toStartOf="@+id/windCaption"
+        app:layout_constraintTop_toBottomOf="@+id/windTextView" />
+
+    <TextView
+        android:id="@+id/cloudsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="52dp"
+        android:textSize="23sp"
+        app:layout_constraintStart_toEndOf="@+id/cloudsCaption"
+        app:layout_constraintTop_toBottomOf="@+id/humidityTextView"
+        tools:text="Clouds" />
+
+    <TextView
+        android:id="@+id/cloudsCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="@string/cloud_icon"
+        android:textSize="27sp"
+        app:layout_constraintStart_toStartOf="@+id/humidityCaption"
+        app:layout_constraintTop_toBottomOf="@+id/humidityTextView" />
+
+    <TextView
+        android:id="@+id/windTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="23sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureTextView"
+        tools:text="Wind" />
+
+    <TextView
+        android:id="@+id/windCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/wind_icon"
+        android:textSize="27sp"
+        app:layout_constraintEnd_toStartOf="@+id/windTextView"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureTextView" />
 
 </android.support.constraint.ConstraintLayout>
