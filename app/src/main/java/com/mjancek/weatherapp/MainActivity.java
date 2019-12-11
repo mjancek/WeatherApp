@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         windIcon = findViewById(R.id.windCaption);
         windText = findViewById(R.id.windTextView);
 
+        // Change font to weather font
         Typeface face = Typeface.createFromAsset(getAssets(), "font/weathericons_regular_webfont.ttf");
         weatherIcon.setTypeface(face);
         humidityIcon.setTypeface(face);
@@ -86,10 +87,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        // For getting location
+        // Get location
         // Through fusedLocationClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        // Check if app has permission
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             getPermissionAndLocation();
         }else{
@@ -104,8 +106,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
+    /**
+     * Function to refresh weather after user press button
+     * @param theBtn UI component button
+     */
     public void refreshWeather(View theBtn){
 
         getLocation();
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /**
+    /*
      * Check if user want to give permission
      */
     public void getPermissionAndLocation(){
@@ -125,18 +129,20 @@ public class MainActivity extends AppCompatActivity {
             // TODO: Show dialog with reason to grand permission to access location (snackbar)
         }else{
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
-            getLocation();
+            getLocation();      // FIXME: check this call
         }
     }
 
 
 
+    // Invoked after getting result from requesting permission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == MY_PERMISSIONS_ACCESS_COARSE_LOCATION){
             if((grantResults.length == 1) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
                 getLocation();
             }else{
+                // TODO: what to do when app doesn't have location?
                 finishAndRemoveTask();
             }
         }
@@ -174,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            // If there is no connection, infrom user about it and cancel task
+            // If there is no connection, inform user about it and cancel task
             if(!isConnected(getApplicationContext())) {
                 Toast.makeText(getApplicationContext(), "No internet connection", Toast.LENGTH_SHORT).show();
                 this.cancel(true);
@@ -267,15 +273,20 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-//            Log.d("Main", weatherStatus.getMain());
-//            Log.d("City", weatherStatus.getCity());
-//            Log.d("Icon", weatherStatus.getIcon());
+            Log.d("Main", weatherStatus.getMain());
+            Log.d("City", weatherStatus.getCity());
+            Log.d("Icon", weatherStatus.getIcon());
             showWeather(weatherStatus);
 
             refreshBtn.setEnabled(true);
         }
     }
 
+
+    /**
+     * Show weather information to user
+     * @param weatherStatus weather data
+     */
     void showWeather(Weather weatherStatus){
 
         cityText.setText(weatherStatus.getCity());

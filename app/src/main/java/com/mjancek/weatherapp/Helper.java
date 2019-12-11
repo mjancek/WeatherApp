@@ -12,8 +12,6 @@ class Helper {
     private static String API_KEY = "c8f689ae68579c9a4ecd94b2ce4dff44";
     private static String API_LINK = "http://api.openweathermap.org/data/2.5/weather?";
 
-//    private static String[] resourceID[] = {["i01d.png", ]};
-
 
 
     /**
@@ -25,17 +23,6 @@ class Helper {
     static String getLink(double lat, double lon){
 
         return API_LINK + String.format("lat=%s&lon=%s&APPID=%s&units=metric", lat, lon, API_KEY);
-    }
-
-
-    /**
-     * Build link to current weather image
-     * @param imageID ID of current weather image
-     * @return full link to current weather image
-     */
-    static String getImage(String imageID){
-
-        return "http://openweathermap.org/img/w/" + imageID;
     }
 
 
@@ -52,6 +39,7 @@ class Helper {
 
     }
 
+
     /**
      * Set weather icon from weather font
      * @param context actual context of app
@@ -61,17 +49,16 @@ class Helper {
     public static String setWeatherIcon(Context context, int id) {
         id /= 100;
         String icon = "";
-//        if (id * 100 == 800) {
-//            int hourOfDay = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-//            if (hourOfDay >= 7 && hourOfDay < 20) {
-//                icon = context.getString(R.string.weather_sunny);
-//            }
-//            else {
-//                icon = context.getString(R.string.weather_clear_night);
-//            }
-//        }
-//        else {
-            switch (id) {
+        if (id * 100 == 800) {
+            int hourOfDay = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+            if (hourOfDay >= 7 && hourOfDay < 20) {
+                icon = context.getString(R.string.weather_sunny);
+            }
+            else {
+                icon = context.getString(R.string.weather_clear_night);
+            }
+        } else{
+            switch(id){
                 case 2:
                     icon = context.getString(R.string.weather_thunder);
                     break;
@@ -91,6 +78,7 @@ class Helper {
                     icon = context.getString(R.string.weather_rainy);
                     break;
             }
+        }
 
         return icon;
     }
